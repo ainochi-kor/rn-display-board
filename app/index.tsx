@@ -3,7 +3,6 @@ import { StatusBar } from "expo-status-bar";
 import React, { useEffect, useRef, useState } from "react";
 import {
   Animated,
-  Dimensions,
   Easing,
   KeyboardAvoidingView,
   Platform,
@@ -17,7 +16,7 @@ import {
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-const SPEED_MULTIPLIER = 25; // A higher number means slower speed.
+const SPEED_MULTIPLIER = 7; // A higher number means slower speed.
 
 export default function DisplayBoardScreen() {
   const [text, setText] = useState("");
@@ -45,6 +44,9 @@ export default function DisplayBoardScreen() {
     animationRef.current?.stop();
     try {
       await ScreenOrientation.unlockAsync();
+      await ScreenOrientation.lockAsync(
+        ScreenOrientation.OrientationLock.PORTRAIT
+      );
       setMode("input");
     } catch (error) {
       console.log("Failed to unlock orientation:", error);
@@ -153,7 +155,11 @@ export default function DisplayBoardScreen() {
 
   return (
     <SafeAreaView style={styles.safeAreaContainer}>
-      <StatusBar style="light" backgroundColor="#000" hidden={mode === "display"} />
+      <StatusBar
+        style="light"
+        backgroundColor="#000"
+        hidden={mode === "display"}
+      />
       {mode === "input" ? renderInputMode() : <DisplayModeView />}
     </SafeAreaView>
   );
